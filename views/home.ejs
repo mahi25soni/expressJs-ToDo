@@ -1,0 +1,30 @@
+<%- include('header');  -%>
+
+    <body>
+        <div class="divOne">
+            <h2>Task Manager</h2>
+            <form action="/" method="post">
+                <input type="text" name="yourTask" class="form-control">
+                <button class="btn btn-sm btn-outline-primary" type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="divOne" style="position: relative;">
+            <%for(var i= (tasks.length-1); i>=0; i--){%>
+                <div class="mb-3">
+                    <p> <%= tasks[i].name %></p>
+                    <span class="divTwo">
+                        <a href="/<%= tasks[i]._id %>"><button class="btn btn-sm btn-outline-warning">Edit</button></a>
+                        <a href="/<%= tasks[i]._id %>"><button class="btn btn-sm btn-outline-danger">Delete</button></a>
+                    </span>
+                </div>
+                <%}%>
+
+        </div>
+        <script src="/js/custom.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/jquery.js"></script>
+        <script src="/js/popper.js"></script>
+
+    </body>
+
+    </html>

@@ -1,0 +1,43 @@
+<%- include('header'); -%>
+
+    <body>
+        <div class="divOne">
+            <h2>Edit Here</h2>
+            <form action="/<%=id%>" method="post">
+                <div class="row text-center">
+                    <div class="col-3">
+                        Task Id
+                    </div>
+                    <div class="col-9">
+                        <%=id%>
+                    </div>
+                    <div class="col-3">
+                        Name
+                    </div>
+                    <div class="col-9">
+                        <input type="text" name="yourTask" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        Compeleted
+                    </div>
+                    <div class="col-9">
+                        <input type="checkbox" name="completed">
+                    </div>
+                    <div class="col-12 m-2">
+                        <button type="submit" name="submit" class="btn btn-sm btn-success" style="width: 100%;" value=<%=id%>>Edit</button>
+                    </div>
+                    <div class="col-12 hidden">
+                        <p>Edited Successfully</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <script src="/js/custom.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/jquery.js"></script>
+        <script src="/js/popper.js"></script>
+
+    </body>
+
+    </html>

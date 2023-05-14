@@ -1,0 +1,38 @@
+body{
+    font-size: 18px;
+    font-weight: 700;
+    font-family: cursive, Arial, sans-serif;
+}
+
+.divOne{
+    width: 40%;
+    margin: 100px auto auto auto;
+    padding: 20px;
+box-shadow: 0 29px 52px rgba(0,0,0,0.40), 0 25px 16px rgba(0,0,0,0.20);
+
+}
+h2{
+ text-align: center;
+ margin: 0px 0 20px 0;
+
+}
+p{
+    display: inline;
+}
+form{
+    text-align: center;
+}
+.form-control{
+    width: 80%;
+    display: inline;
+}
+.divTwo{
+    position: absolute;
+    right: 15px;
+}
+
+.hidden{
+    visibility: hidden;
+}
+
+
