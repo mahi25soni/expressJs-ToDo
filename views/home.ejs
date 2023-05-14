@@ -14,7 +14,7 @@
                     <p> <%= tasks[i].name %></p>
                     <span class="divTwo">
                         <a href="/<%= tasks[i]._id %>"><button class="btn btn-sm btn-outline-warning">Edit</button></a>
-                        <a href="/<%= tasks[i]._id %>"><button class="btn btn-sm btn-outline-danger">Delete</button></a>
+                        <a href="delete/<%= tasks[i]._id %>"><button class="btn btn-sm btn-outline-danger">Delete</button></a>
                     </span>
                 </div>
                 <%}%>
