@@ -1,13 +1,16 @@
 
 const connectDB = require("./db/mongoose")
 const express = require("express")
+const bodyParser = require("body-parser")
+
 const ejs = require("ejs")
 const tasks = require("./router/task")
 require('dotenv').config()
 
 const app = express()
 
-app.use(express.urlencoded  ( {extended:false} ) )
+app.use(bodyParser.urlencoded  ( {extended:false} ) )
+app.use(bodyParser.json());
 app.use(express.static("public"))
 app.set("view engine", "ejs")
 
