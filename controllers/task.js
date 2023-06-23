@@ -5,29 +5,27 @@ const jwt  = require("jsonwebtoken")
 const { all } = require("../router/task")
 
 
-const getAll = (req, res) => {
-    task.find(function(err, elements){
+
+const addTask = async (req, res) => {
+    req.body.user_id = req.user.userId;
+    const newtask = new task(req.body)
+    await newtask.save()
+    await user.updateOne({_id : req.user.userId}, {$push : {all_tasks : newtask._id}}).exec()
+    res.send(newtask)
+}
+
+const getAllTasks = (req, res) => {
+    task.find({user_id : req.user.userId } , function(err, allTasks){
         if(err){
             console.log(err)
         }
         else{
-            res.render("home", {
-                "tasks" : elements
-            })
+            res.send(allTasks)
         }
     })
 }
 
-const postOne = async (req, res) => {
-    const task = req.body.yourTask
-    const newtask = new task ({
-        name : task
-    })
-    await newtask.save()
-    res.redirect("/")
-}
-
-const editPage = (req, res) => {
+const getOneTask = (req, res) => {
     const taskId = req.params.taskId
 
     task.findOne({_id : taskId}, function(err, element){
@@ -42,7 +40,7 @@ const editPage = (req, res) => {
     })
 }
 
-const editOne = (req, res) => {
+const updateOneTask = (req, res) => {
     const taskId = req.params.taskId
     var completed = req.body.completed
     const yourTask = req.body.yourTask
@@ -62,7 +60,7 @@ const editOne = (req, res) => {
     })
 }
 
-const deleteOne = (req, res) => {
+const deleteOneTask = (req, res) => {
     const taskId = req.params.taskId
     task.deleteOne({_id : taskId}, function(err, result){
         if(err){
@@ -119,11 +117,11 @@ const getAllUsers = async (req, res) => {
 }
   
 module.exports = {
-    getAll,
-    postOne,
-    editPage,
-    editOne,
-    deleteOne,
+    getAllTasks,
+    addTask,
+    getOneTask,
+    updateOneTask,
+    deleteOneTask,
     createUser,
     getAllUsers,
     loginUser

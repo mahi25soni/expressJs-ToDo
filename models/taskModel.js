@@ -1,10 +1,17 @@
 const mongoose = require("mongoose")
 
 const taskSchema = new mongoose.Schema({
-    name : String,
-    done : {
+    task_name : {
         type : String,
+        required : [true, "Enter your task name"]
+    },
+    done : {
+        type : Boolean,
         default : false
+    },
+    user_id : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "userSchema"
     }
 })
 
@@ -24,10 +31,10 @@ const userSchema = new mongoose.Schema({
         type : String,
         required : true
     }, 
-    all_tasks : {
+    all_tasks : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "taskSchema"
-    }
+    }]
 })
 const user = mongoose.model("user", userSchema)
 
