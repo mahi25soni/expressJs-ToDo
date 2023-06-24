@@ -28,34 +28,24 @@ const getAllTasks = (req, res) => {
 const getOneTask = (req, res) => {
     const taskId = req.params.taskId
 
-    task.findOne({_id : taskId}, function(err, element){
+    task.findOne({_id : taskId}, function(err, task){
         if(err){
             console.log(err)
         }
         else{
-            res.render("edit", {
-                'id' : element._id,
-            })
+            res.send(task)
         }
     })
 }
 
 const updateOneTask = (req, res) => {
     const taskId = req.params.taskId
-    var completed = req.body.completed
-    const yourTask = req.body.yourTask
-    if ( completed == "on"){
-        completed = true;
-    }
-    else{
-        completed = false
-    }
-    task.updateOne({_id : taskId}, {$set:{name : yourTask, done: completed}}, function(err, result){
+    task.updateOne({_id : taskId}, {$set:{task_name : req.body.task_name, done: req.body.done}}, function(err, task){
         if(err){
             console.log(err)
         }
         else{
-            res.redirect('/') 
+            res.json({message : "One task have been deleted", data : task}) 
         }
     })
 }
@@ -67,7 +57,7 @@ const deleteOneTask = (req, res) => {
             console.log(err)
         }
         else{
-            res.redirect("/")
+            res.json({message : "One task have been deleted", data : result})
         }
     })  
 }
