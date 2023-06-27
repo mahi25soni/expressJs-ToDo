@@ -1,9 +1,13 @@
 const mongoose = require("mongoose")
 
 const taskSchema = new mongoose.Schema({
-    task_name : {
+    title : {
         type : String,
         required : [true, "Enter your task name"]
+    },
+    description : {
+        type : String,
+        require : [true, "Enter your description"]
     },
     done : {
         type : Boolean,
