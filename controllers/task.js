@@ -40,7 +40,7 @@ const getOneTask = (req, res) => {
 
 const updateOneTask = (req, res) => {
     const taskId = req.params.taskId
-    task.updateOne({_id : taskId}, {$set:{task_name : req.body.task_name, done: req.body.done}}, function(err, task){
+    task.updateOne({_id : taskId}, {$set:{title : req.body.title, description: req.body.description}}, function(err, task){
         if(err){
             console.log(err)
         }
