@@ -64,37 +64,36 @@ const deleteOneTask = (req, res) => {
 
 
 const createUser = async (req, res) => {
-    console.log("createruser wala console ", req.body)
     try{
         req.body.password = await hash(req.body.password, 10)
         const newuser = new user(req.body)
         await newuser.save()
-        res.send(newuser)
+        res.json({"status":true, "data":newuser})
     }
     catch(e){
-        return res.send(e)
+        return res.json({"status":false, "data":e})
     }
 
 }
 const loginUser = async (req, res) => {
-    console.log("lsfndskfdj ", req.body)
+    let status = false;
     const findUser = await user.findOne({email : req.body.email}).exec()
     if(!findUser){
-        return res.status(401).send("So such user exist")
+        return res.status(201).json({"status":status, "data":"User doesn't exist"})
     }
     else {
         console.log("sdfnklsk ", findUser.password)
         const comparePass = await compare(req.body.password, findUser.password)
         if(!comparePass){
-            return res.status(401).send("Password doesn't match")
+            return res.status(201).json({"status":status, "data":"Password doesn't match"})
         }
         jwt.sign({userId : findUser._id, email : findUser.email}, "adminsecret", (err, token) => {
             if(err) {
                 return res.send(err)
             }
             else {
-                req.headers.authorization = token
-                return res.send(token)
+                status = true
+                return res.send({"status":status, "data":token})
             }
         })
     }
