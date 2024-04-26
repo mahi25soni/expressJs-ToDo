@@ -1,12 +1,13 @@
-
-const connectDB = require("./db/mongoose")
 const express = require("express")
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
 var cors = require('cors')
-
-const ejs = require("ejs")
-const tasks = require("./router/task")
 require('dotenv').config()
+
+
+
+const tasks = require("./router/task")
+const connectDB = require("./db/mongoose")
 
 const app = express()
 
@@ -14,11 +15,12 @@ const app = express()
 app.use(cors())
 
 app.use(bodyParser.urlencoded  ( {extended:false} ) )
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(cookieParser())
 
-app.use(express.static("public"))
-app.set("view engine", "ejs")
 
+
+app.use("/", tasks)
 const port = process.env.PORT_URL || 5000
 
 const start = async () => {
@@ -36,7 +38,6 @@ const start = async () => {
 }
 start()
 
-app.use("/", tasks)
 
 
 

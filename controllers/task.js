@@ -65,36 +65,90 @@ const deleteOneTask = (req, res) => {
 
 const createUser = async (req, res) => {
     try{
-        req.body.password = await hash(req.body.password, 10)
-        const newuser = new user(req.body)
-        await newuser.save()
-        res.json({"status":true, "data":newuser})
-    }
-    catch(e){
-        return res.json({"status":false, "data":e})
-    }
+        const emailCheck = await user.findOne({email : req.body.email})
 
-}
-const loginUser = async (req, res) => {
-    let status = false;
-    const findUser = await user.findOne({email : req.body.email}).exec()
-    if(!findUser){
-        return res.status(201).json({"status":status, "data":"User doesn't exist"})
-    }
-    else {
-        console.log("sdfnklsk ", findUser.password)
-        const comparePass = await compare(req.body.password, findUser.password)
-        if(!comparePass){
-            return res.status(201).json({"status":status, "data":"Password doesn't match"})
+        if(emailCheck) {
+            return res.status(409).json({
+                success : false,
+                message : "User already exists! Try another email"
+            })
         }
-        jwt.sign({userId : findUser._id, email : findUser.email}, "adminsecret", (err, token) => {
-            if(err) {
-                return res.send(err)
+        // Email and password aren't empty, can be made sure from frontend
+        const hash_pass = await bcrypt.hash(req.body.password, 10);
+
+        const new_user = await Users.create({
+            ...req.body,
+            password : hash_pass
+        })
+
+        res.status(201).json({
+            success : true,
+            message : "User added successfully!",
+            data : new_user
+        })
+
+    } catch(error) {
+        console.log(error.message)
+        return res.status(500).json({
+            success : false,
+            message : "Unknown error while sign in!"
+        })
+    }
+}
+
+const loginUser = async (req, res) => {
+    try{
+        const {email, password} = req.body;
+
+        const isUser = await user.findOne({email})
+        if(!isUser) {
+            return res.status(404).json({
+                success : false,
+                message : "This user doesn't exists!"
+            })
+        }
+
+        bcrypt.compare(password, isUser.password, (err, result) => {
+            if(err){
+                return res.status(401).json({
+                    success : false,
+                    message : "Wrong Password. Retry!"
+                })
             }
-            else {
-                status = true
-                return res.send({"status":status, "data":token})
+            else{
+                const payload = {
+                    userId : isUser._id,
+                    username : isUser.username,
+                    email : isUser.email,
+                }
+
+                jwt.sign(payload, process.env.JWT_SECRET_KEY, (err, result) => {
+                    if(err) {
+                        return res.status(401).json({
+                            success : false,
+                            message : "Error while creating jwt token "
+                        }) 
+                    }
+                    else{
+                        // cookie creation
+                        const cookie_option = {
+                            expires : new Date(Date.now() + 3*24*60*60*1000),
+                            httpOnly : true
+                        }
+                        res.cookie(process.env.TOKEN_NAME, result, cookie_option)
+                        res.status(200).json({
+                            success : true,
+                            message : "Login Successfully!"
+                        })
+                    }
+                })
             }
+        })
+
+    } catch(error) {
+        return res.status(500).json({
+            success : false,
+            message : "Unknown error while log in!"
         })
     }
 }
