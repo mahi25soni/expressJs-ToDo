@@ -7,12 +7,12 @@ function verifyToken(req, res, next) {
         res.redirect("/auth/login")
     }
     else {
-        jwt.verify(token , "adminsecret", (err, token) => {
+        jwt.verify(token , "adminsecret", (err, decoded) => {
             if(err){
                 return res.status(201).send({"status":false, data:"Invalid token"})
             }
             else {
-                req.user = token
+                req.user = decoded
 
                 next()
             }

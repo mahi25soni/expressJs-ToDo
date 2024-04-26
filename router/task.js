@@ -10,7 +10,11 @@ router.post('/auth/login', loginUser)
 
 router.get('/users/', verifyToken, getAllUsers)
 
-router.route("/tasks").post(verifyToken, addTask).get(verifyToken, getAllTasks)
+router.post("/tasks", verifyToken, addTask)
+router.get("/tasks", verifyToken, getAllTasks)
+
+
+
 router.route("/tasks/:taskId").get(verifyToken, getOneTask).put(verifyToken, updateOneTask).delete(verifyToken, deleteOneTask)
 
 
