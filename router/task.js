@@ -5,17 +5,18 @@ const {verifyToken } = require("../middlewares/authToken")
 const {getAllTasks, addTask, getOneTask, updateOneTask, deleteOneTask} = require("../controllers/task")
 const {createUser,loginUser, getAllUsers } = require("../controllers/task")
 
-router.post('/auth/register/', createUser)
-router.post('/auth/login', loginUser)
-
-router.get('/users/', verifyToken, getAllUsers)
-
-router.post("/tasks", verifyToken, addTask)
-router.get("/tasks", verifyToken, getAllTasks)
+router.post('/register', createUser)
+router.post('/login', loginUser)
 
 
+router.post("/task", verifyToken, addTask)
+router.get("/task", verifyToken, getAllTasks)
 
-router.route("/tasks/:taskId").get(verifyToken, getOneTask).put(verifyToken, updateOneTask).delete(verifyToken, deleteOneTask)
+
+router.put('/task/:id', verifyToken, updateOneTask)
+router.delete('/task/:id', verifyToken, deleteOneTask)
+
+
 
 
 

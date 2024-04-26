@@ -1,65 +1,101 @@
 const { task , user} = require("../models/taskModel")
-const bodyParser = require("body-parser")
 const { hash , compare} = require("bcrypt")
-const jwt  = require("jsonwebtoken")
-const { all } = require("../router/task")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 
 
 const addTask = async (req, res) => {
-    req.body.user_id = req.user.userId;
-    const newtask = new task(req.body)
-    await newtask.save()
-    await user.updateOne({_id : req.user.userId}, {$push : {all_tasks : newtask._id}}).exec()
-    res.send(newtask)
+
+    try{
+        req.body.user_id = req.user.userId;
+        const newtask = new task(req.body)
+        await newtask.save()
+        await user.updateOne({_id : req.user.userId}, {$push : {all_tasks : newtask._id}}).exec()
+        res.send(newtask)
+    } catch(error) {
+        console.log(error.message)
+        return res.status(500).json({
+            success : false,
+            message : "Unknown error while sign in!"
+        })
+    }
 }
 
 const getAllTasks = (req, res) => {
-    task.find({user_id : req.user.userId } , function(err, allTasks){
-        if(err){
-            console.log(err)
-        }
-        else{
-            res.send(allTasks)
-        }
-    })
+    try{
+        task.find({user_id : req.user.userId } , function(err, allTasks){
+            if(err){
+                console.log(err)
+            }
+            else{
+                res.status(201).json({
+                    success : true,
+                    message : "User added successfully!",
+                    data : allTasks
+                })
+
+            }
+        })
+    } catch(error) {
+        console.log(error.message)
+        return res.status(500).json({
+            success : false,
+            message : "Unknown error while sign in!"
+        })
+    }
+
 }
 
-const getOneTask = (req, res) => {
-    const taskId = req.params.taskId
-
-    task.findOne({_id : taskId}, function(err, task){
-        if(err){
-            console.log(err)
-        }
-        else{
-            res.send(task)
-        }
-    })
-}
 
 const updateOneTask = (req, res) => {
-    const taskId = req.params.taskId
-    task.updateOne({_id : taskId}, {$set:{title : req.body.title, description: req.body.description}}, function(err, task){
-        if(err){
-            console.log(err)
-        }
-        else{
-            res.json({message : "One task have been deleted", data : task}) 
-        }
-    })
+    try{
+        const taskId = req.params.id
+        task.updateOne({_id : taskId}, {$set:{title : req.body.title, description: req.body.description}}, function(err, updated_task){
+            if(err){
+                console.log(err)
+            }
+            else{
+                res.status(201).json({
+                    success : true,
+                    message : "User added successfully!",
+                    data : updated_task
+                })
+            }
+        })
+    } catch(error) {
+        console.log(error.message)
+        return res.status(500).json({
+            success : false,
+            message : "Unknown error while sign in!"
+        })
+    }
+
 }
 
 const deleteOneTask = (req, res) => {
-    const taskId = req.params.taskId
-    task.deleteOne({_id : taskId}, function(err, result){
-        if(err){
-            console.log(err)
-        }
-        else{
-            res.json({message : "One task have been deleted", data : result})
-        }
-    })  
+    try{
+        const taskId = req.params.id
+        task.deleteOne({_id : taskId}, function(err, result){
+            if(err){
+                console.log(err)
+            }
+            else{
+                res.status(201).json({
+                    success : true,
+                    message : "User deleted successfully!",
+                })
+            }
+        })  
+
+    } catch(error) {
+        console.log(error.message)
+        return res.status(500).json({
+            success : false,
+            message : "Unknown error while sign in!"
+        })
+    }
+
 }
 
 
@@ -154,18 +190,13 @@ const loginUser = async (req, res) => {
 }
 
 
-const getAllUsers = async (req, res) => {
-    const allUsers = await user.find().exec()
-    res.send(allUsers)
-}
+
   
 module.exports = {
     getAllTasks,
     addTask,
-    getOneTask,
     updateOneTask,
     deleteOneTask,
     createUser,
-    getAllUsers,
     loginUser
 }
